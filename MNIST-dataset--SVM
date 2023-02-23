@@ -1,0 +1,48 @@
+# Import the required libraries
+import numpy as np
+from sklearn import datasets
+from sklearn import svm
+
+# Load the MNIST dataset
+data_path = "C:\\Users\\MIT\\Goalearn\\Task3\\"
+train_data = np.loadtxt(data_path + "mnist_train.csv", 
+                        delimiter=",")
+test_data = np.loadtxt(data_path + "mnist_test.csv", 
+                       delimiter=",") 
+
+
+fac = 0.99 / 255
+X_train = np.asfarray(train_data[:, 1:]) * fac + 0.01
+X_test = np.asfarray(test_data[:, 1:]) * fac + 0.01
+
+Y_train = np.asfarray(train_data[:, :1])
+Y_test = np.asfarray(test_data[:, :1])
+
+
+# Create the SVM model
+clf = svm.SVC(C=10,gamma='scale', kernel="rbf") 
+
+
+# Train the model
+clf.fit(X_train, Y_train)
+
+
+# Make predictions with the test set
+predictions = clf.predict(X_test)
+
+
+# metrics 9792
+from sklearn import metrics
+from sklearn.metrics import confusion_matrix
+print("accuracy", metrics.accuracy_score(Y_test, predictions), "\n")
+print(metrics.confusion_matrix(Y_test, predictions), "\n")
+
+
+# calculating and plotting the confusion matrix
+from matplotlib import pyplot as plt
+from mlxtend.plotting import plot_confusion_matrix
+cm1 = metrics.confusion_matrix(Y_test, predictions)
+plot_confusion_matrix(conf_mat=cm1,show_absolute=True,
+                                show_normed=True,
+                                colorbar=True)
+plt.show()
